@@ -1,3 +1,3 @@
-###冲顶大会
+### 冲顶大会
 ###### resptext = requests.get('http://htpmsg.jiecaojingxuan.com/msg/current',timeout=5).text
 ###### dict = json.loads(resptext )
