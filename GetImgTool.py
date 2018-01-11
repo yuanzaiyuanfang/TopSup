@@ -20,7 +20,7 @@ img = Image.open("./screenshot.png")
 #region = img.crop((75, 315, 1167, 789)) # iPhone 7P
 
 question  = img.crop((50, 350, 1000, 560)) # 坚果 pro1
-choices = img.crop((75, 535, 990, 1130))
+choices = img.crop((75, 540, 990, 1130))
 
 plt.subplot(221)
 im = plt.imshow(img, animated=True)

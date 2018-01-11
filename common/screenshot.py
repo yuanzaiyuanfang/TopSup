@@ -18,6 +18,7 @@ def pull_screenshot():
     可根据效率及适用性由高到低排序
     """
     global SCREENSHOT_WAY
+    print("方法",SCREENSHOT_WAY)
     if 1 <= SCREENSHOT_WAY <= 3:
         process = subprocess.Popen(
             'adb shell screencap -p',

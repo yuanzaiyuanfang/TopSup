@@ -11,11 +11,9 @@ def open_webbrowser(question):
     webbrowser.open('https://baidu.com/s?wd=' + question)
 
 def open_webbrowser_count(question,choices):
-    print('\n-- 方法2： 题目+选项搜索结果计数法 --\n')
-    print('Question: ' + question)
-    if '不是' in question:
-        print('**请注意此题为否定题,选计数最少的**')
-
+    print('\n-- 方法2：')
+    #print('Question: ' + question)
+    
     counts = []
     for i in range(len(choices)):
         # 请求
@@ -27,24 +25,22 @@ def open_webbrowser_count(question,choices):
         count = content[:index].replace(',', '')
         counts.append(count)
         #print(choices[i] + " : " + count)
-    output(choices, counts)
+    output(choices, counts, question)
 
 def count_base(question,choices):
-    print('\n-- 方法3： 题目搜索结果包含选项词频计数法 --\n')
+    print('\n-- 方法3：')
     # 请求
     req = requests.get(url='http://www.baidu.com/s', params={'wd':question})
     content = req.text
     #print(content)
     counts = []
-    print('Question: '+question)
-    if '不是' in question:
-        print('**请注意此题为否定题,选计数最少的**')
+    #print('Question: '+question)   
     for i in range(len(choices)):
         counts.append(content.count(choices[i]))
         #print(choices[i] + " : " + str(counts[i]))
-    output(choices, counts)
+    output(choices, counts, question)
 
-def output(choices, counts):
+def output(choices, counts, question):
     counts = list(map(int, counts))
     #print(choices, counts)
 
@@ -55,24 +51,38 @@ def output(choices, counts):
     index_min = counts.index(min(counts))
 
     if index_max == index_min:
-        print("\033[1;31m此方法失效！\033[0m")
+        print("此方法失效！\n\n")
         return
+
+    fan = False
+    if '不' in question:
+        fan = not fan
+    if '错' in question:
+        fan = not fan
+    if fan:    
+        print('**请注意此题为否定题')
+    
 
     for i in range(len(choices)):
         if i == index_max:
             # 绿色为计数最高的答案
-            print("\033[1;32m{0:^10} {1:^10}\033[0m".format(choices[i], counts[i]))
+            if not fan:
+                print("{0:^15} {1:^15} 第{2:^1}个最可能".format(choices[i], counts[i], i+1))
+            else:
+                print("{0:^15} {1:^15}".format(choices[i], counts[i]))
         elif i == index_min:
             # 红色为计数最低的答案
-            print("\033[0;31m{0:^10}{1:^10}\033[0m".format(choices[i], counts[i]))
+            if fan:
+                print("{0:^15} {1:^15} 第{2:^1}个最可能".format(choices[i], counts[i], i+1))
+            else:
+                print("{0:^15} {1:^15}".format(choices[i], counts[i]))
         else:
-            print("{0:^10} {1:^10}".format(choices[i], counts[i]))
+            print("{0:^15} {1:^15}".format(choices[i], counts[i]))
 
+    print('\n\n')
 
 def run_algorithm(al_num, question, choices):
-    if al_num == 0:
-        open_webbrowser(question)
-    elif al_num == 1:
+    if al_num == 1:
         open_webbrowser_count(question, choices)
     elif al_num == 2:
         count_base(question, choices)
